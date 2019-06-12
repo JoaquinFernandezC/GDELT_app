@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+
+<div class="row">
+    <div class="col-sm-1"></div>
+<div class="col-sm-10" >
+    <h1>Tones Count</h1>
+
+    <canvas id="chart" height="45" width="200"></canvas>
+
+</div>
+</div>
+
+<div class="row">
+    <div class="col-sm-1"></div>
+<div class="col-sm-10" >
+    <h1>Goldstein count</h1>
+
+    <canvas id="goldstein_chart" height="45" width="200"></canvas>
+
+</div>
+</div>
+
+</body>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script>
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/tone/tone_count');
+
+        xhr.responseType = 'json';
+
+        xhr.send();
+
+        // the response is {"message": "Hello, world!"}
+        xhr.onload = function() {
+            let responseObj = xhr.response;
+            var labels = responseObj.tones;
+            var counts = responseObj.counts;
+            draw_tones_count(labels,counts);
+            draw_goldstein_count(responseObj.goldsteins,responseObj.goldsteins_counts)
+        };
+
+
+        function draw_tones_count(labels, dataset) {
+            var ctx = document.getElementById('chart').getContext('2d');
+            var colors = []
+
+            labels.forEach(function (label) {
+                 var r = Math.floor(0);
+                 var g = Math.floor(102);
+                 var b = Math.floor(102);
+                 colors.push("rgb(" + r + "," + g + "," + b + ")");
+            })
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tone count',
+                        data: dataset,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+
+         function draw_goldstein_count(labels, dataset) {
+            var ctx = document.getElementById('goldstein_chart').getContext('2d');
+            var colors = []
+
+            labels.forEach(function (label) {
+                 var r = Math.floor(0);
+                 var g = Math.floor(102);
+                 var b = Math.floor(102);
+                 colors.push("rgb(" + r + "," + g + "," + b + ")");
+            })
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Goldstein count',
+                        data: dataset,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+</script>
+
+</html>

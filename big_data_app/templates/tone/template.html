@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-1"></div>
+<div class="col-sm-7" >
+    <h1>Tones in time (Average: -1.99)</h1>
+
+    <canvas id="chart" height="700" width="1000"></canvas>
+
+</div>
+    <div class="col-sm-2">
+
+    </div>
+</div>
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script>
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/tone/tone_by_date');
+
+        xhr.responseType = 'json';
+
+        xhr.send();
+
+        // the response is {"message": "Hello, world!"}
+        xhr.onload = function() {
+            let responseObj = xhr.response;
+            var tone = responseObj.tones;
+            var labels = responseObj.labels;
+            draw_tone_in_time(labels,tone);};
+
+
+        function draw_tone_in_time(labels, dataset) {
+            var ctx = document.getElementById('chart').getContext('2d');
+            var colors = []
+
+            labels.forEach(function (label) {
+                 var r = Math.floor(0);
+                 var g = Math.floor(102);
+                 var b = Math.floor(102);
+                 colors.push("rgb(" + r + "," + g + "," + b + ")");
+            })
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average tone',
+                        data: dataset,
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+</script>
+
+</html>

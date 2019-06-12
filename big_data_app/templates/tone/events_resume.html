@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+</head>
+<body>
+    <h1>Events presence in percentage</h1>
+<div class="row">
+    <div class="col-sm-7">
+    <canvas id="chart" height="700" width="1000"></canvas>
+    </div>
+</div>
+
+</body>
+
+<script>
+
+    let xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/tone/events_percentage');
+        xhr.responseType = 'json';
+        xhr.send();
+        // the response is {"message": "Hello, world!"}
+        xhr.onload = function() {
+            let responseObj = xhr.response;
+            var labels = responseObj.events_codes;
+            var dataset = responseObj.counts;
+            draw_pie_chart(labels,dataset);};
+function draw_pie_chart(labels,dataset) {
+    var colors = []
+
+            labels.forEach(function (label) {
+                 var r = Math.floor((Math.random() * 255) + 0);
+                 var g = Math.floor((Math.random() * 255) + 0);
+                 var b =  Math.floor((Math.random() * 255) + 0);
+                 colors.push("rgb(" + r + "," + g + "," + b + ")");
+            })
+    var data = {
+    labels: labels,
+    datasets: [
+        {
+            data: dataset,
+            backgroundColor: colors
+        }]
+};
+   var ctx = document.getElementById('chart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: data
+})
+}
+
+
+</script>
+
+
+</html>
